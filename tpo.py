@@ -18,129 +18,151 @@ def notavalida(nota):
        nota = int(input("ingrese una nota valida"))
     return nota
 
-def cant_promocionados(matriz):
-    matriz = []
-    for i in range(len(matrizmaterias)):
-        sum = 0
-        for j in range(len(matrizmaterias[i])):
-            if matrizmaterias[i][j][3] == "promociona":
-                sum = sum + 1
-        matriz.append(sum)
-    return matriz
+alumnos = {
+    "ana": {
+        "matematicas": [8, 9, 8, "promociona"],
+        "programacion": [3, 6, 4, "previo"],
+        "repre": [0, 0, 0, 0,  "reprobado"]
+    },
+    "carlos": {
+        "matematicas": [5, 8, 7, "promociona"],
+        "historia": [2, 5, 2, "recursa"]
+    },
+    "lucia": {
+        "historia": [9, 8, 8, "promociona"],
+        "programacion": [9, 10, 9, "aprobada"]
+    }
+}
 
-def cant_recursados(matriz):
-    matriz = []
-    for i in range(len(matrizmaterias)):
-        sum = 0
-        for j in range(len(matrizmaterias[i])):
-            if matrizmaterias[i][j][3] == "recursa":
-                sum = sum + 1
-        matriz.append(sum)
-    return matriz
+materias = ("matematicas", "historia", "programacion", "repre")
+condicion_alumno = ("promociona", "previo", "reprobado", "recursa", "aprobada")
 
-def cant_aprobados(matriz):
-    matriz = []
-    for i in range(len(matrizmaterias)):
-        sum = 0
-        for j in range(len(matrizmaterias[i])):
-            if matrizmaterias[i][j][3] == "aprobada":
-                sum = sum + 1
-        matriz.append(sum)
-    return matriz
+def display_notas_alumnos(students_data):
+    # Print header
+    print(f"{'Student':<10} {'Subject':<15} {'Grades':<25} {'Condition':<12}")
+    print("-" * 60)
+    
+    # Print student grades
+    for student, subjects in students_data.items():
+        for subject, grades in subjects.items():
+            grades_str = ', '.join(map(str, grades[:-1]))  # Convertimos las notas en string, excluyendo la condición
+            condition = grades[-1]  # La última posición es la condición
+            print(f"{student:<10} {subject:<15} {grades_str:<25} {condition:<12}")
+        print("-" * 60)
 
-def cant_previos(matriz):
-    matriz = []
-    for i in range(len(matrizmaterias)):
-        sum = 0
-        for j in range(len(matrizmaterias[i])):
-            if matrizmaterias[i][j][3] == "previo":
-                sum = sum + 1
-        matriz.append(sum)
-    return matriz
+def mostrar_alumno(alumno, alumnos):
+    if alumno not in alumnos:
+        print("no se encuentra el alumno")
+    else:
+        print(alumnos[alumno])
 
-def crear_matriz(materias, alumnos):
-     matriz = []
-     for materia in materias:
+def imprimir_materia(materia, alumnos):
+    for alumno in alumnos:
+        if materia in alumnos[alumno]:
+            print("Alumno: ", alumno)
+            print(alumnos[alumno][materia])
+
+def matriz_promedios(alumnos):
+    matriz = []
+    for alumno in alumnos:
         fila = []
+        for materia in alumnos[alumno]:
+            i = 0
+            sum = 0
+            for notas in alumnos[alumno][materia]:
+                if str(notas).isnumeric() :
+                    sum = sum + notas
+                    i = i + 1
+            promedio = sum/i
+            fila.append(promedio)
+        matriz.append(fila)
+    return matriz
+
+def matriz_resultados(alumnos):
+    matriz = []
+    for alumno in alumnos:
+        fila = []
+        for materia in alumnos[alumno]:
+            for notas in alumnos[alumno][materia]:
+                if not str(notas).isnumeric() :
+                    fila.append(notas)
+        matriz.append(fila)
+    return matriz
+
+ancho = 50 
+def mostrar_menu():
+ # Ancho del "cubo", lo ajustamos para que la decoración superior e inferior sea igual
+    print()
+    decoracion_superior = "✿ ✿ ✿ ✿ ✿ ✿  MENÚ PRINCIPAL ✿ ✿ ✿ ✿ ✿ ✿"
+    decoracion_inferior = "✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿"
+    flor = "✿"
+    opciones = []
+    # Mostramos las decoraciones y el menú
+    print(decoracion_superior)
+    print("a) ✿ profesor".ljust(ancho - 12) + "✿")
+    print("b) ❀ alumno".ljust(ancho - 12) + "❀")
+    print("c) ✾ admin (proximamente..)".ljust(ancho - 12) + "✾")
+    print("d) ✿ Ver grilla alumnos".ljust(ancho - 12) + "✿")
+    print("s) ✿ Salir".ljust(ancho - 12) + "✿")
+    
+    print(decoracion_inferior)
+
+def operacion_a():
+    print("❀ Hola profe ❀".center(60))
+    print("a) ✿ Ver materias".ljust(ancho - 12) + "✿")
+    print("b) ❀ Ver promedios generales".ljust(ancho - 12) + "❀")
+    print("c) ❀ Ver resultados globales".ljust(ancho - 12) + "❀")
+
+    op = input("ingrese la operacion que desea realizar: ").lower()
+    if op == 'a':
+        for mat in materias:
+            print("│ ✿ "+ mat + "                         ✿".center(ancho))
+        materia = input("ingrese la materia que desea ver: ").lower()
+        if materia in materias:
+            imprimir_materia(materia, alumnos)
+        else:
+            print("no se encuentra la materia")
+    elif op == 'b':
+        matrizprom = matriz_promedios(alumnos)
+        i = 0
         for alumno in alumnos:
-            notas = []
-            condicion = ""
-            for i in range(3):
-                if i == 0:
-                        print("ingrese la nota de " + materia + " de " + str(alumno) + "en el primer parcial")
-                        nota = int(input())
-                        nota = notavalida(nota)
-                        notas.append(nota)
-                elif i == 1:
-                        print("ingrese la nota de " + materia + " de " + str(alumno) + "en el segundo parcial")
-                        nota = int(input())
-                        nota = notavalida(nota)
-                        notas.append(nota)
-                elif i == 2 and not promocione(notas):
-                        if recurse(notas):
-                            print("el alumno " + str(alumno) + " recursa la materia")
-                            notas.append(0)
-                            condicion = "recursa"
-                            notas.append(condicion)
-                        else:
-                            if notas[0] < 4 or notas[1] < 4:
-                                print("el alumno " + str(alumno) + " tiene que recuperar un parcial de la materia")
-                                print("ingrese la nota de " + materia + " de " + str(alumno) + "en el recuperatorio")
-                                nota = int(input())
-                                nota = notavalida(nota)
-                                notas.append(nota)
-                                if nota > 4:
-                                     condicion = "previo"
-                                else:
-                                     condicion = "recursa"
-                            else:
-                                print("el alumno " + str(alumno) + " tiene que rendir el final de la materia")
-                                print("ingrese la nota de " + materia + " de " + str(alumno) + "en el final")
-                                nota = int(input())
-                                nota = notavalida(nota)
-                                notas.append(nota)
-                                if nota > 4:
-                                    condicion = "aprobada"
-                                else:
-                                    condicion = "previo"
-                            notas.append(condicion)
-                else:
-                        print("el alumno " + str(alumno) + " promociona la materia")
-                        notas.append(promedio(notas))
-                        condicion = "promociona"
-                        notas.append(condicion)
-            fila.append(notas)
-        matriz.append(fila)                      
-     return matriz
+            print("Alumno: ", alumno)
 
-def imprimirmatriz(matriz, alumnos, materias):
-    for i in range(len(matriz)):
-        print("Alumno legajo: ", alumnos[i])
-        for j in range(len(matriz)):
-            print("Notas de la materia:", materias[j])
-            for k in range(len(matriz[i][j])):
-                if k == 0:
-                    print("Primer parcial:", matriz[i][j][k], end=" ")
-                elif k == 1:
-                    print("Segundo parcial:", matriz[i][j][k], end=" ")
-                elif k == 2:
-                    print("Final/promedio:", matriz[i][j][k], end=" ")
-                elif k == 3:
-                    print("Condicion:", matriz[i][j][k])
-        print("")
+            print("Promedio general: ", matrizprom[i])
+            i = i + 1
+    elif op == 'c':
+        matrizres =matriz_resultados(alumnos)
+        print(matrizres)
+    else:
+        print("Opción no válida. Intente de nuevo. ❀".center(60))
 
 
-materias =["algebra", "programacion"] # lo saco del json
 
-alumnos = [1,2]
 
-matrizmaterias = crear_matriz(materias, alumnos)
-imprimirmatriz(matrizmaterias, alumnos, materias)
+def operacion_b():
+    print("✾ Ingrese su nombre ✾".center(60))
+    nombre = input().lower
+    mostrar_alumno(nombre, alumnos)
 
-for i in range(len(materias)):
-    print("Materia: ", materias[i])
-    print("Promocionaron: ",(cant_promocionados(matrizmaterias))[i], end=" ")
-    print("Recursaron:", (cant_recursados(matrizmaterias))[i], end=" ")
-    print("Aprobaron:",(cant_aprobados(matrizmaterias))[i], end=" ")
-    print("Previos: ",(cant_previos(matrizmaterias))[i])
+def operacion_c():
+    print("✿ Has seleccionado la operación C ✿".center(60))
 
+# Bucle del menú
+while True:
+    mostrar_menu()
+    print(" ")
+    opcion = input("Seleccione una opción: ").lower()
+
+    if opcion == 'a':
+        operacion_a()
+    elif opcion == 'b':
+        operacion_b()
+    elif opcion == 'c':
+        operacion_c()
+    elif opcion == 'd':
+        display_notas_alumnos(alumnos)
+    elif opcion == 's':
+        print("Saliendo del programa... ✿".center(60))
+        break
+    else:
+        print("Opción no válida. Intente de nuevo. ❀".center(60))
