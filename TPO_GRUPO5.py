@@ -14,23 +14,23 @@ def printflores(n):
         print("✿", end=" ")
 
 
-def eliminar_alumno(alumno, alumnos): 
+def eliminar_alumno(alumno, alumnos):  #Eliminar alumno del diccionario
     if alumno in alumnos:
-        alumnos.pop(alumno) # Eliminar del diccionario
+        alumnos.pop(alumno) 
     else:
         print("No se encuentra el alumno")
 
 
-def eliminar_materia(alumno, materia, alumnos):
+def eliminar_materia(alumno, materia, alumnos): # Elimina materia de alumno
     if alumno in alumnos:
         if materia in alumnos[alumno]:
-            alumnos[alumno].pop(materia) # ELiminar del diccionario
+            alumnos[alumno].pop(materia) 
         else:
             print("No se encuentra la materia")
     else:
         print("No se encuentra el alumno")
 
-def display_notas_alumnos(alumnos):
+def display_notas_alumnos(alumnos): # Imprime listado de alumnos con sus notas
     print (" ")
     printflores(1)
     print(" Listado de alumnos de Las Margaritas", end=" ")
@@ -68,28 +68,37 @@ def imprimir_materia(materia, alumnos): # Imprimir datos de una materia
     print("-" * 40)
     for alumno in alumnos:
         if materia in alumnos[alumno]:
-            notas_str = ', '.join(map(str, alumnos[alumno][materia][:-1]))  # Convertimos las notas en string, excluyendo la condición
+            notas_str = ', '.join(map(str, alumnos[alumno][materia][:-1]))  # Convertimos las notas en string, sacamos la condicion
             condicion = alumnos[alumno][materia][-1]  # La última posición es la condición
             print(f"{alumno:<10} {notas_str:<15} {condicion:<15}")
-            print("-" * 40)
-        
-            
+            print("-" * 40)           
 
 def matriz_promedios(alumnos): #Genera matriz de promedios para dar resultados generales
-    matriz = []
+    num_materias = len(materias)
+    num_alumnos = len(alumnos)
+    matriz = [[0] * num_materias for _ in range(num_alumnos)]
+    
+    i = 0
     for alumno in alumnos:
-        fila = []
-        for materia in alumnos[alumno]:
-            notas = alumnos[alumno][materia][:-1]  # saco el ultimo indice
-            if len(notas) > 0:
-                promedio = round(sum(notas) / len(notas), 2)
+        j = 0
+        for materia in materias:
+            if materia in alumnos[alumno]:
+                notas = alumnos[alumno][materia][:-1]  # saco el último índice
+                if len(notas) > 0:
+                    if sum(notas)== 0:
+                        promedio = 0
+                    else:
+                        promedio = round(sum(notas) / len(notas), 2)
+                else:
+                    promedio = 0
+                matriz[i][j] = promedio
             else:
-                promedio = 0
-            fila.append(promedio)
-        matriz.append(fila)
+                matriz[i][j] = 0  # Si el alumno no tiene esa materia o esta en curso, el promedio es 0
+            j += 1
+        i += 1
     return matriz
-
-def printmaterias(mats): # imprimir opciones de materias
+    
+def printmaterias(mats):
     printflores(10)
     print(" ")
     for mat in mats:
@@ -122,13 +131,14 @@ def cuadro_de_honor(alumnos):
     else:
         print("No hay alumnos en el cuadro de honor.")
 
-def mostrar_menu_con_anuncio():
+def mostrar_menu_con_anuncio(): # Imprimir menu
     print ( )
     menu = [
         "a) ✿ Profesor".ljust(ancho - 12) + "✿",
         "b) ❀ Alumno".ljust(ancho - 12) + "❀".ljust(10),
         "c) ✾ Admin".ljust(ancho - 12) + "✾".ljust(10),
         "d) ✿ Ver grilla alumnos".ljust(ancho - 12) + "✿".ljust(10),
+        "e) ❀ Ver pedidos de flores".ljust(ancho - 12) + "❀".ljust(10),
         "s) ✿ Salir".ljust(ancho - 12) + "✿".ljust(10),
     ]
 
@@ -138,7 +148,7 @@ def mostrar_menu_con_anuncio():
         "✿".ljust(1) +  "DE LA PROMO".center(ancho_anuncio - 16)+ "✿",
         "✿".ljust(ancho_anuncio - 15) + "✿",
         "✿ f) Hacer pedido de flores".ljust(ancho_anuncio - 15) + "✿",
-        
+        "",
     ]
 
     decoracion_superior = "✿ ✿ ✿ ✿ ✿ ✿  MENÚ PRINCIPAL ✿ ✿ ✿ ✿ ✿ ✿"
@@ -147,7 +157,7 @@ def mostrar_menu_con_anuncio():
     print(decoracion_superior)
     
     for i in range(len(menu)):
-        print(menu[i].ljust(ancho - 12) + anuncio[i].ljust(10))
+        print(menu[i].ljust(ancho - 12) + anuncio[i].ljust(10)) 
 
     print(decoracion_inferior)
 
@@ -174,14 +184,13 @@ def operacion_a():
         i = 0
         for alumno in alumnos:
             print(" ❀ Alumno: ", alumno)
-            materias_alumno = list(alumnos[alumno].keys())  
             for j in range(len(matrizprom[i])):
-                # veo si hay misma cantidad de materias en matrizprom y en materias_alumno
-                if j < len(materias_alumno):
-                    print("Materia: ", materias_alumno[j], end=" ")
+                if matrizprom[i][j] != 0:  # Si el promedio es 0, no imprimo
+                    print("Materia: ", materias[j], end=" ")
                     print("Promedio: ", matrizprom[i][j])
                 else:
-                    print("Promedio no disponible para la materia: ", materias_alumno[j])
+                    print("Promedio no disponible para la materia: ", materias[j])
+
             print("")
             i += 1
 
@@ -191,10 +200,8 @@ def operacion_a():
     else:
         print("Opción no válida. Intente de nuevo. ❀".center(60))
 
-def operacion_b(ramos):
-    print(f"Hola alumno! ✾ La promo tiene {ramos} ramos para preparar")
-    print(" ")
-    print("✾ Ingrese su nombre ✾".center(60))
+def operacion_b():
+    print("✾ Ingrese su nombre para ver sus notas ✾".center(30))
     nombre = input().capitalize()
     mostrar_alumno(nombre, alumnos)
 
@@ -217,20 +224,27 @@ def operacion_c():
 
     elif op == "b":
         alumno = input("Ingrese el nombre del alumno que desea agregar: ").capitalize()
-        printmaterias(materias)
-        materias_alumno = []
-        for materia in materias:
-            print(materia, end=" ")
-            agregar = input(" Desea agregar la materia? si/no: ").lower()
-            opciones = ["si", "no"]
-            while agregar not in opciones:
-                print("Opción no válida. Intente de nuevo.")
-                agregar = input("Desea agregar la materia? si/no: ").lower()
-            if agregar == "si":
-                materias_alumno.append(materia)
+        while alumno.isnumeric() or not alumno.isalpha():
+            print("El nombre debe contener solo letras.")
+            alumno = input("Ingrese el nombre del alumno que desea agregar: ").capitalize()
+            
+        if alumno in alumnos:
+            print("El alumno ya se encuentra en la lista.")
+        else:
+            printmaterias(materias)
+            materias_alumno = []
+            for materia in materias:
+                print(materia, end=" ")
+                agregar = input(" Desea agregar la materia? si/no: ").lower()
+                opciones = ["si", "no"]
+                while agregar not in opciones:
+                    print("Opción no válida. Intente de nuevo.")
+                    agregar = input("Desea agregar la materia? si/no: ").lower()
+                if agregar == "si":
+                    materias_alumno.append(materia)
 
-        alumnos[alumno] = {mat: [0,0,0,"en curso"] for mat in materias_alumno} # Inicializo como 0 todas las notas
-        display_notas_alumnos(alumnos)
+            alumnos[alumno] = {mat: [0,0,0,"en curso"] for mat in materias_alumno} # Inicializo como 0 todas las notas
+            display_notas_alumnos(alumnos)
 
     elif op=="c":
         alumno = input("Ingrese el nombre del alumno que desea eliminar: ").capitalize()
@@ -251,14 +265,48 @@ def operacion_c():
         print("Opción no válida. Intente de nuevo. ❀".center(60))     
     print(" ")
 
+pedidos_flores = {}
+
+def operacion_e(ramos):
+    print("✾ Pedidos de flores de Las Margaritas ✾".center(30))
+    print(" ")
+    if pedidos_flores:
+        for nombre, ramos in pedidos_flores.items():
+            print(f"Nombre: {nombre}, Ramos: {ramos}")
+    else:
+        print("No hay pedidos de flores.")
+    print(" ")
 
 def operacion_f(ramos):
-    flores = int(input("Ingrese la cantidad de ramos que desea: "))
-    while flores <= 0 :
-        flores= int(input("Cantidad de ramos invalida. Volver a ingresar: "))
-    print("Gracias por ordenar flores con nosotros!")
-    ramos = flores
-    return ramos
+    max_ramos = 100
+    disponibles = max_ramos - ramos
+    
+    if disponibles <= 0:
+        print("Lo siento, no tenemos más ramos disponibles.")
+    else:
+        flores = int(input(f"Ingrese la cantidad de ramos que desea (Máx. {disponibles} ramos disponibles): "))
+        
+        while flores <= 0:
+            print("La cantidad de ramos debe ser mayor que 0.")
+            flores = int(input(f"Ingrese la cantidad de ramos que desea (Máx. {disponibles} ramos disponibles): "))
+
+        if flores > disponibles:
+            print(f"No tenemos suficientes ramos para cubrir {flores}. Podemos ofrecerle {disponibles} ramos.")
+            respuesta = input(f"¿Desea pedir {disponibles} ramos en su lugar? (si/no): ").lower()
+            if respuesta == "si":
+                flores = disponibles
+            else:
+                print("No se ha realizado el pedido.")
+                flores = 0
+        if flores != 0:
+            ramos += flores
+            nombre = input("Ingrese su nombre: ").capitalize()
+            if nombre in pedidos_flores:
+                pedidos_flores[nombre] += flores
+            else:
+                pedidos_flores[nombre] = flores
+            print(f"Gracias {nombre}, ha pedido {flores} ramos de flores.")
+    return ramos 
 
 # PROGRAMA PRINCIPAL
 alumnos = {
@@ -309,22 +357,22 @@ while continuar:
     if opcion == 'a':
         operacion_a()
     elif opcion == 'b':
-        operacion_b(ramos)
+        operacion_b()
     elif opcion == 'c':
         operacion_c()
     elif opcion == 'd':
         display_notas_alumnos(alumnos)
     elif opcion == 'f':
-        ramos += operacion_f(ramos)
-
+        ramos = operacion_f(ramos)
+    elif opcion == 'e':
+        operacion_e(ramos)
     elif opcion == 's':
-        print()
+        print ()
         if ramos==0:
             print("Recuerde colaborar con la promo encargando sus flores amarillas ❀❀❀".center(60))
         else: 
             print ("La promo ya ha vendido", ramos,"ramos de flores amarillas ❀ Agradecemos a la comunidad de Las Margaritas ")
-        print ()
         print("Saliendo del programa... ✿".center(60))
         continuar = False
     else:
-        print("Opción no válida. Intente de nuevo. ❀".center(60))
+        print("Opción no válida. Intente de nuevo. ❀".center(60)) 
