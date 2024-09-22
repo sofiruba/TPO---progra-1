@@ -86,11 +86,10 @@ def matriz_promedios(alumnos):
 
 def printmaterias(mats):
     printflores(10)
-
+    print("")
     for mat in mats:
         printflores(1)
         print( mat + " ".ljust(ancho - 14 - len(mat)) )
-        printflores(1)
         print("")
 
     printflores(10)
@@ -160,7 +159,7 @@ def operacion_a():
     print(" ")
     if op == 'a':
         printmaterias(materias)
-        materia = input("Ingrese la materia que desea ver: ").lower()
+        materia = input("Ingrese la materia que desea ver: ").capitalize()
         print(" ")
         if materia in materias:
             imprimir_materia(materia, alumnos)
