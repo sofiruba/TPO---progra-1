@@ -2,11 +2,17 @@
 Sistema de Evaluación Académica Crear un sistema de evaluación que utilice matrices para calificaciones, 
 listas y diccionarios para gestionar estudiantes y materias,
 """
-# Variables globales para la impresion
+# VARIABLES GLOBALES PARA LA IMPRESIÓN
 ancho = 50 
 ancho_anuncio = 45
 ramos = 0
-# Funciones 
+
+# FUNCIONES
+
+def printflores(n):
+    for i in range(n):
+        print("✿", end=" ")
+
 
 def eliminar_alumno(alumno, alumnos): 
     if alumno in alumnos:
@@ -14,14 +20,11 @@ def eliminar_alumno(alumno, alumnos):
     else:
         print("No se encuentra el alumno")
 
-def printflores(n):
-    for i in range(n):
-        print("✿", end=" ")
 
 def eliminar_materia(alumno, materia, alumnos):
     if alumno in alumnos:
         if materia in alumnos[alumno]:
-            alumnos[alumno].pop(materia)
+            alumnos[alumno].pop(materia) # ELiminar del diccionario
         else:
             print("No se encuentra la materia")
     else:
@@ -43,7 +46,7 @@ def display_notas_alumnos(alumnos):
             print(f"{alumno:<10} {mat:<15} {notas_str:<25} {condicion:<12}")
         print("-" * 60)
 
-def mostrar_alumno(alumno, alumnos):
+def mostrar_alumno(alumno, alumnos): # Imprimir boletin academico de alumno
     if alumno not in alumnos:
         print("No se encuentra el alumno.")
     else:
@@ -60,17 +63,19 @@ def mostrar_alumno(alumno, alumnos):
             print("Condición:", notas[-1])
             print("-" * 40)
 
-def imprimir_materia(materia, alumnos):
+def imprimir_materia(materia, alumnos): # Imprimir datos de una materia
     print(f"{'Alumno':<10} {'Notas':<15} {'Condición':<25}")
+    print("-" * 40)
     for alumno in alumnos:
-        print("-" * 40)
         if materia in alumnos[alumno]:
             notas_str = ', '.join(map(str, alumnos[alumno][materia][:-1]))  # Convertimos las notas en string, excluyendo la condición
             condicion = alumnos[alumno][materia][-1]  # La última posición es la condición
             print(f"{alumno:<10} {notas_str:<15} {condicion:<15}")
+            print("-" * 40)
+        
             
 
-def matriz_promedios(alumnos): 
+def matriz_promedios(alumnos): #Genera matriz de promedios para dar resultados generales
     matriz = []
     for alumno in alumnos:
         fila = []
@@ -84,14 +89,13 @@ def matriz_promedios(alumnos):
         matriz.append(fila)
     return matriz
 
-def printmaterias(mats):
+def printmaterias(mats): # imprimir opciones de materias
     printflores(10)
-    print("")
+    print(" ")
     for mat in mats:
         printflores(1)
         print( mat + " ".ljust(ancho - 14 - len(mat)) )
-        print("")
-
+        
     printflores(10)
     print(" ")
 
@@ -104,7 +108,7 @@ def cuadro_de_honor(alumnos):
         for mat in materias:  
             notas = materias[mat]  
             condicion = notas[-1]  
-            if condicion not in ["Promociona", "Aprobada"] and todas_aprobadas:
+            if condicion not in ["Promociona", "Aprobada"] and todas_aprobadas: # cuando encuentra una desaprobada cambia la condicion
                 todas_aprobadas = False  
         if todas_aprobadas:
             honor.append(alumno)  
@@ -153,7 +157,7 @@ def operacion_a():
     print("a) ✿ Ver materias".ljust(ancho - 12) + "✿")
     print("b) ❀ Ver promedios generales".ljust(ancho - 12) + "❀")
     print("c) ✿ Ver cuadro de honor".ljust(ancho - 12) + "✿")
-    printflores(10)
+    printflores(20)
     print(" ")
     op = input("Ingrese la operacion que desea realizar: ").lower()
     print(" ")
@@ -178,6 +182,7 @@ def operacion_a():
                     print("Promedio: ", matrizprom[i][j])
                 else:
                     print("Promedio no disponible para la materia: ", materias_alumno[j])
+            print("")
             i += 1
 
     elif op == 'c':
@@ -187,7 +192,8 @@ def operacion_a():
         print("Opción no válida. Intente de nuevo. ❀".center(60))
 
 def operacion_b(ramos):
-    print(f"TIENEN {ramos} PARA PREPARAR")
+    print(f"Hola alumno! ✾ La promo tiene {ramos} ramos para preparar")
+    print(" ")
     print("✾ Ingrese su nombre ✾".center(60))
     nombre = input().capitalize()
     mostrar_alumno(nombre, alumnos)
@@ -195,13 +201,13 @@ def operacion_b(ramos):
 def operacion_c():
     print (" ")
     printflores(6)
-    print("❀  HOLA ADMIN ❀ ")
+    print("❀  HOLA ADMIN ❀", end=" ")
     printflores(6)
     print(" ")
     print("a) ✿ Eliminar alumnos".ljust(ancho - 12) + "✿")
     print("b) ❀ Agregar alumnos".ljust(ancho - 12) + "❀")
     print("c) ❀ Eliminar alumno de materia".ljust(ancho - 12) + "❀")
-    printflores(10)
+    printflores(20)
     print(" ")
     op = input("Ingrese la operacion que desea realizar: ").lower()
     if op == "a":
@@ -248,12 +254,12 @@ def operacion_c():
 
 def operacion_f(ramos):
     flores = int(input("Ingrese la cantidad de ramos que desea: "))
-    if flores > 0:
-        print("Gracias por ordenar flores con nosotros!")
-        ramos = flores
-    else:
-        ramos = 0
+    while flores <= 0 :
+        flores= int(input("Cantidad de ramos invalida. Volver a ingresar: "))
+    print("Gracias por ordenar flores con nosotros!")
+    ramos = flores
     return ramos
+
 # PROGRAMA PRINCIPAL
 alumnos = {
     "Ana": {
@@ -289,7 +295,7 @@ materias = ("Matematicas", "Historia", "Programacion", "Literatura")
 condicion_alumno = ("Promociona", "Previo", "Reprobado", "Recursa", "Aprobada", "En curso")
 
 
-print("❀ ❀ ❀ ❀ ❀ ❀".ljust(1) +  " ✿  Las Margaritas ✿ ".center(57)+ "❀ ❀ ❀ ❀ ❀ ❀",)
+print("❀ ❀ ❀ ❀ ❀ ❀" +  " ✿  Las Margaritas ✿ ".center(57)+ "❀ ❀ ❀ ❀ ❀ ❀",)
 
 
 #Bucle del menú
@@ -312,6 +318,12 @@ while continuar:
         ramos += operacion_f(ramos)
 
     elif opcion == 's':
+        print()
+        if ramos==0:
+            print("Recuerde colaborar con la promo encargando sus flores amarillas ❀❀❀".center(60))
+        else: 
+            print ("La promo ya ha vendido", ramos,"ramos de flores amarillas ❀ Agradecemos a la comunidad de Las Margaritas ")
+        print ()
         print("Saliendo del programa... ✿".center(60))
         continuar = False
     else:
