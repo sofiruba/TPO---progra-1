@@ -13,20 +13,9 @@ def printflores(n):
     for i in range(n):
         print("✿", end=" ")
 
-
 def eliminar_alumno(alumno, alumnos):  #Eliminar alumno del diccionario
     if alumno in alumnos:
         alumnos.pop(alumno) 
-    else:
-        print("No se encuentra el alumno")
-
-
-def eliminar_materia(alumno, materia, alumnos): # Elimina materia de alumno
-    if alumno in alumnos:
-        if materia in alumnos[alumno]:
-            alumnos[alumno].pop(materia) 
-        else:
-            print("No se encuentra la materia")
     else:
         print("No se encuentra el alumno")
 
@@ -42,9 +31,9 @@ def display_notas_alumnos(alumnos): # Imprime listado de alumnos con sus notas
     for alumno, mats in alumnos.items():
         for mat, notas in mats.items():
             notas_str = ', '.join(map(str, notas[:-1]))  # Convertir  notas en string
-            condicion = notas[-1]  # última posición 
+            condicion = notas[-1]  # última posición
             print(f"{alumno:<10} {mat:<15} {notas_str:<25} {condicion:<12}")
-        print("-" * 60)
+        print("-" * 60) 
 
 def mostrar_alumno(alumno, alumnos): # Imprimir boletin academico de alumno
     if alumno not in alumnos:
@@ -77,23 +66,19 @@ def matriz_promedios(alumnos): #Genera matriz de promedios para dar resultados g
     num_materias = len(materias)
     num_alumnos = len(alumnos)
     matriz = [[0] * num_materias for _ in range(num_alumnos)]
-    
     i = 0
     for alumno in alumnos:
         j = 0
         for materia in materias:
+            promedio = 0
             if materia in alumnos[alumno]:
                 notas = alumnos[alumno][materia][:-1]  # saco el último índice
-                if len(notas) > 0:
-                    if sum(notas)== 0:
-                        promedio = 0
-                    else:
-                        promedio = round(sum(notas) / len(notas), 2)
+                if len(notas) > 0 and sum(notas) != 0:
+                    promedio = (sum(notas) / len(notas))
+                    promedio
                 else:
                     promedio = 0
-                matriz[i][j] = promedio
-            else:
-                matriz[i][j] = 0  # Si el alumno no tiene esa materia o esta en curso, el promedio es 0
+            matriz[i][j] = promedio  # Si el alumno no tiene esa materia o esta en curso, el promedio es 0
             j += 1
         i += 1
     return matriz
@@ -187,7 +172,7 @@ def operacion_a():
             for j in range(len(matrizprom[i])):
                 if matrizprom[i][j] != 0:  # Si el promedio es 0, no imprimo
                     print("Materia: ", materias[j], end=" ")
-                    print("Promedio: ", matrizprom[i][j])
+                    print("Promedio:%.2f " %matrizprom[i][j])
                 else:
                     print("Promedio no disponible para la materia: ", materias[j])
 
@@ -253,7 +238,7 @@ def operacion_c():
             printmaterias(materias_alumno)
             materia = input("Ingrese la materia que desea dar de baja: ").capitalize()
             if materia in materias_alumno:
-                eliminar_materia(alumno, materia, alumnos)
+                alumnos[alumno].pop(materia)
             else:
                 print("No se encuentra la materia")
             display_notas_alumnos(alumnos)
