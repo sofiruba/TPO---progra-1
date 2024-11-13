@@ -229,12 +229,17 @@ if usuario in nombres_usuarios:
     rol = usuarios[nombres_usuarios.index(usuario)]["rol"]
     if rol == "admin":
         operacion_c()
+        decision = input("Desea realizar otra operación? si/no: ").lower()
+        while decision == "si":
+            operacion_a()
+            decision = input("Desea realizar otra operación? si/no: ").lower()
     else:
         operacion_a()
-    desicion = input("Desea realizar otra operación? si/no: ").lower()
-    while desicion == "si":
-        operacion_a()
-        desicion = input("Desea realizar otra operación? si/no: ").lower()
+        decision = input("Desea realizar otra operación? si/no: ").lower()
+        while decision == "si":
+            operacion_a()
+            decision = input("Desea realizar otra operación? si/no: ").lower()
+    
     print("Adios")
 else:
     print("Usuario no encontrado")
