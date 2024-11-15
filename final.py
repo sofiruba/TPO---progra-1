@@ -12,9 +12,7 @@ def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
     print(f"{'Curso':<10}{'Alumno':<10} {'Materia':<15} {'Notas':<25}")
     print("-" * 60)
     for curso, alumnos in cursos.items():
-        
         for alumno, it in alumnos.items():
-            
             materias = it["Materias"]
             cont = 0
             for mat, notas in materias.items():
@@ -23,7 +21,6 @@ def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
                     print(f"{'': <10}{'':<10} {mat:<15} {notas_str:<25}")
                 else:
                     print(f"{curso: <10}{alumno:<10} {mat:<15} {notas_str:<25}")
-                
                 cont += 1
             print("-" * 60)
             
