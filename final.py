@@ -147,16 +147,28 @@ def operacion_c():
     menu = [
         "a) Eliminar alumnos",
         "b) Agregar alumnos",
-        "c) Eliminar alumno de materia",
     ]
 
     for item in menu:
         print(item)
     op = input("Ingrese la operación que desea realizar: ").lower()
     if op == "a":
-        alumno = input("Ingrese el nombre del alumno que desea eliminar: ").capitalize()
-        eliminar_alumno(alumno, alumnos)
-        display_notas_alumnos(alumnos)
+        for año in años: 
+            print(año, " ingrese el numero ", años.index(año))
+        año = input()
+        alumnos_curso = cursos[años[int(año)]]
+        alumno = input("Ingrese el nombre del alumno que desea eliminar de la materia: ").capitalize()
+        if alumno in alumnos_curso:   # materias del alumno
+            cursos[años[int(año)]].pop(alumno)
+            
+        else:
+            print("No se encuentra el alumno. ")
+            desea = input("Desea intentar de nuevo? si/no: ").lower()
+            while desea not in ["si", "no"]: # esto esta horrible hacerlo mejor!!
+                print("Opción no válida. Intente de nuevo.")
+                desea = input("Desea intentar de nuevo? si/no: ").lower()
+                while desea == "si":
+                    alumno = input("Ingrese el nombre del alumno que desea eliminar de la materia: ").capitalize()
 
     elif op == "b":
         alumno = input("Ingrese el nombre del alumno que desea agregar: ").capitalize()
@@ -182,20 +194,6 @@ def operacion_c():
             alumnos[alumno] = {mat: [0,0,0,"en curso"] for mat in materias_alumno}
             display_notas_alumnos(alumnos)
 
-    elif op == "c":
-        alumno = input("Ingrese el nombre del alumno que desea eliminar: ").capitalize()
-        if alumno in alumnos: 
-            materias_alumno = alumnos[alumno].keys()  # materias del alumno
-            printmaterias(materias_alumno)
-            materia = input("Ingrese la materia que desea dar de baja: ").capitalize()
-            if materia in materias_alumno:
-                alumnos[alumno].pop(materia)
-            else:
-                print("No se encuentra la materia")
-            display_notas_alumnos(alumnos)
-            print(" ")
-        else:
-            print("No se encuentra el alumno.")
     else:
         print("Opción no válida. Intente de nuevo.")
 
@@ -203,20 +201,111 @@ def operacion_c():
 
 
 # ALUMNOS Y SUS MATERIAS
-materias = ["Historia", "Geografía", "Lengua"]
-alumnos = {
-    "Ana": {
-        "Historia": [7, 8, 9, "Promociona"],
-        "Geografía": [7, 7, 8, "Promociona"],
-        "Lengua": [8, 9, 10, "Promociona"]
+años = ["1ro", "2do", "3ro", "4to", "5to"]
+materias = ["Historia", "Matematicas", "Lengua"]
+cursos = {
+    "1ro": {
+        "Bautista": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        },
+        "Mateo": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        }
+    }, 
+    "2do": {
+        "Bautista": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        },
+        "Mateo": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        }
     },
-    "Luis": {
-        "Historia": [6, 5, 6, "Aprobada"],
-        "Geografía": [5, 6, 7, "Promociona"],
-        "Lengua": [6, 5, 5, "Aprobada"]
-    }
-}
+    "3ro": {
+        "Bautista": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        },
+        "Mateo": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        }
+    },
+     "4to": {
+         "Bautista": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",}
+        ,
+        "Mateo": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        }
+     },
+     "5to": {
+         "Bautista": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",}
+        ,
+        "Mateo": {
+            "Materias": {
+                "Historia": [7, 8, 9],
+                "Geografía": [7, 7, 8],
+                "Lengua": [8, 9, 10]
+            },
+            "Faltas": 5,
+            "Condicion": "OK",
+        }
+     }
 
+}
 # Inicio del programa
 
 usuario = input("ingrese su usuario: ")
