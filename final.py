@@ -221,12 +221,11 @@ alumnos = {
 
 usuario = input("ingrese su usuario: ")
 arch = open("usuarios.json", "rt")
-archivo = json.load(arch)
-usuarios = archivo["usuarios"]
-nombres_usuarios = [usuarios[i]["usuario"] for i in range(len(usuarios))]
+usuarios = json.load(arch)
+nombres_usuarios = usuarios.keys()
 if usuario in nombres_usuarios:
     print("Bienvenido")
-    rol = usuarios[nombres_usuarios.index(usuario)]["rol"]
+    rol = usuarios[usuario]["rol"]
     if rol == "admin":
         operacion_c()
         decision = input("Desea realizar otra operación? si/no: ").lower()

@@ -1,20 +1,20 @@
 {
-    "usuarios": [
-      {
-        "usuario": "profesor1",
+    
+      "profesor1":{
+        
         "rol": "profesor"
       },
-      {
-        "usuario": "admin1",
+      "admin1":{
+        
         "rol": "admin"
       },
-      {
-        "usuario": "profesor2",
+      "profesor2":{
+        
         "rol": "profesor"
       },
-      {
-        "usuario": "admin2",
+      "admin2":{
+        
         "rol": "admin"
       }
-    ]
+    
   }
