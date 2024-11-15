@@ -95,24 +95,15 @@ def cuadro_de_honor(alumnos):
     else:
         print("No hay alumnos en el cuadro de honor.")
 
-def mostrar_menu_con_anuncio():  # Imprimir menú
-    print("MENÚ PRINCIPAL")
-    menu = [
-        "a) Profesor",
-        "b) Alumno",
-        "c) Admin",
-        "s) Salir",
-    ]
-
-    for item in menu:
-        print(item)
-
 
 def operacion_a():
-    print("HOLA PROFE")
-    print("a) Ver materias")
-    print("b) Ver promedios generales")
-    print("c) Ver cuadro de honor")
+    menu =[
+        "a) Ver materias",
+        "b) Ver notas",
+        "c) Ver alumnos",
+    ]
+    for item in menu:
+        print(item)
     op = input("Ingrese la operación que desea realizar: ").lower()
     print(" ")
     if op == 'a':
@@ -154,13 +145,16 @@ def operacion_c():
         print(item)
     op = input("Ingrese la operación que desea realizar: ").lower()
     if op == "a":
-        for año in años: 
-            print(año, " ingrese el numero ", (años.index(año) + 1))
-        año = input()
+
+        año = int(input("Ingrese el año del curso: "))
+        año -=1
         alumnos_curso = cursos[años[int(año)]]
-        alumno = input("Ingrese el nombre del alumno que desea eliminar de la materia: ").capitalize()
-        if alumno in alumnos_curso:   # materias del alumno
+        for alumno in alumnos_curso:
+            print(alumno)
+        alumno = input("Ingrese el nombre del alumno que desea eliminar: ").capitalize()
+        if alumno in alumnos_curso.keys():   # materias del alumno
             cursos[años[int(año)]].pop(alumno)
+            display_notas_alumnos(cursos)
             
         else:
             print("No se encuentra el alumno. ")
@@ -170,7 +164,7 @@ def operacion_c():
                 desea = input("Desea intentar de nuevo? si/no: ").lower()
                 while desea == "si":
                     alumno = input("Ingrese el nombre del alumno que desea eliminar de la materia: ").capitalize()
-            display_notas_alumnos(cursos)
+            
 
     elif op == "b":
         for año in años: 
@@ -220,7 +214,7 @@ cursos = {
             "Sanciones": 2
         }
     },
-    "2ro": {
+    "2do": {
         "Martina": {
             "Materias": {
                 "Lengua": [7, 7, 8],
@@ -246,7 +240,7 @@ cursos = {
             "Sanciones": 3
         }
     },
-    "3ro": {
+    "3to": {
         "Sofía": {
             "Materias": {
                 "Lengua": [9, 8, 7],
@@ -272,7 +266,7 @@ cursos = {
             "Sanciones": 4
         }
     },
-    "4ro": {
+    "4to": {
         "Lola": {
             "Materias": {
                 "Lengua": [7, 9, 8],
@@ -298,7 +292,7 @@ cursos = {
             "Sanciones": 1
         }
     },
-    "5ro": {
+    "5to": {
         "Juan": {
             "Materias": {
                 "Lengua": [8, 9, 9],
