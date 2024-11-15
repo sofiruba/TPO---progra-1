@@ -7,17 +7,27 @@ def eliminar_alumno(alumno, alumnos):  # Eliminar alumno del diccionario
     else:
         print("No se encuentra el alumno")
 
-def display_notas_alumnos(alumnos):  # Imprime listado de alumnos con sus notas
+def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
     print("Listado de alumnos de Las Margaritas")
-    print(f"{'Alumno':<10} {'Materia':<15} {'Notas':<25} {'Condición':<30}")
+    print(f"{'Curso':<10}{'Alumno':<10} {'Materia':<15} {'Notas':<25}")
     print("-" * 60)
-
-    for alumno, mats in alumnos.items():
-        for mat, notas in mats.items():
-            notas_str = ', '.join(map(str, notas[:-1]))  # Convertir notas en string
-            condicion = notas[-1]  # última posición
-            print(f"{alumno:<10} {mat:<15} {notas_str:<25} {condicion:<12}")
-        print("-" * 60)
+    for curso, alumnos in cursos.items():
+        
+        for alumno, it in alumnos.items():
+            
+            materias = it["Materias"]
+            cont = 0
+            for mat, notas in materias.items():
+                notas_str = ', '.join(map(str, notas[:-1]))
+                if cont > 0:
+                    print(f"{'': <10}{'':<10} {mat:<15} {notas_str:<25}")
+                else:
+                    print(f"{curso: <10}{alumno:<10} {mat:<15} {notas_str:<25}")
+                
+                cont += 1
+            print("-" * 60)
+            
+        
 
 def mostrar_alumno(alumno, alumnos):  # Imprimir boletín académico de alumno
     if alumno not in alumnos:
@@ -154,7 +164,7 @@ def operacion_c():
     op = input("Ingrese la operación que desea realizar: ").lower()
     if op == "a":
         for año in años: 
-            print(año, " ingrese el numero ", años.index(año))
+            print(año, " ingrese el numero ", (años.index(año) + 1))
         año = input()
         alumnos_curso = cursos[años[int(año)]]
         alumno = input("Ingrese el nombre del alumno que desea eliminar de la materia: ").capitalize()
@@ -169,30 +179,19 @@ def operacion_c():
                 desea = input("Desea intentar de nuevo? si/no: ").lower()
                 while desea == "si":
                     alumno = input("Ingrese el nombre del alumno que desea eliminar de la materia: ").capitalize()
+            display_notas_alumnos(cursos)
 
     elif op == "b":
+        for año in años: 
+            print(año, " ingrese el numero ", (años.index(año) + 1))
+        año = input()
         alumno = input("Ingrese el nombre del alumno que desea agregar: ").capitalize()
         while alumno.isnumeric() or not alumno.isalpha():
             print("El nombre debe contener solo letras.")
             alumno = input("Ingrese el nombre del alumno que desea agregar: ").capitalize()
-            
-        if alumno in alumnos:
-            print("El alumno ya se encuentra en la lista.")
-        else:
-            printmaterias(materias)
-            materias_alumno = []
-            for materia in materias:
-                print(materia, end=" ")
-                agregar = input("Desea agregar la materia? si/no: ").lower()
-                opciones = ["si", "no"]
-                while agregar not in opciones:
-                    print("Opción no válida. Intente de nuevo.")
-                    agregar = input("Desea agregar la materia? si/no: ").lower()
-                if agregar == "si":
-                    materias_alumno.append(materia)
-
-            alumnos[alumno] = {mat: [0,0,0,"en curso"] for mat in materias_alumno}
-            display_notas_alumnos(alumnos)
+        materias_alumno = {materia: [] for materia in materias}
+        cursos[años[int(año)]][alumno] = { "Materias": materias_alumno, "Faltas": 0, "Condicion": "OK" }
+        display_notas_alumnos(cursos)
 
     else:
         print("Opción no válida. Intente de nuevo.")
@@ -315,6 +314,7 @@ nombres_usuarios = usuarios.keys()
 if usuario in nombres_usuarios:
     print("Bienvenido")
     rol = usuarios[usuario]["rol"]
+    display_notas_alumnos(cursos)
     if rol == "admin":
         operacion_c()
         decision = input("Desea realizar otra operación? si/no: ").lower()
