@@ -1,12 +1,6 @@
 import json
 # FUNCIONES
 
-def eliminar_alumno(alumno, alumnos):  # Eliminar alumno del diccionario
-    if alumno in alumnos:
-        alumnos.pop(alumno) 
-    else:
-        print("No se encuentra el alumno")
-
 def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
     print("Listado de alumnos de Las Margaritas")
     print(f"{'Curso':<10}{'Alumno':<10} {'Materia':<15} {'Notas':<25}")
@@ -196,112 +190,142 @@ def operacion_c():
 
 
 
-# ALUMNOS Y SUS MATERIAS
+# VARIABLES y diccionarios
 años = ["1ro", "2do", "3ro", "4to", "5to"]
 materias = ["Historia", "Matematicas", "Lengua"]
 cursos = {
     "1ro": {
-        "Bautista": {
+        "Lucas": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [7, 8, 6],
+                "Matemática": [5, 6, 7],
+                "Historia": [6, 5, 7]
             },
-            "Faltas": 5,
+            "Faltas": 12,
             "Condicion": "OK",
+            "Mora": "No",
+            "Previas": ["Historia"],
+            "Sanciones": 1
         },
-        "Mateo": {
+        "Camila": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [8, 9, 10],
+                "Matemática": [4, 5, 6],
+                "Historia": [6, 7, 5]
             },
-            "Faltas": 5,
-            "Condicion": "OK",
+            "Faltas": 28,
+            "Condicion": "Libre",
+            "Mora": "No",
+            "Previas": ["Lengua", "Historia", "Matemática"],
+            "Sanciones": 2
         }
-    }, 
-    "2do": {
-        "Bautista": {
+    },
+    "2ro": {
+        "Martina": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [7, 7, 8],
+                "Matemática": [8, 9, 7],
+                "Historia": [5, 6, 5]
             },
-            "Faltas": 5,
+            "Faltas": 18,
             "Condicion": "OK",
+            "Mora": "No",
+            "Previas": ["Historia"],
+            "Sanciones": 0
         },
         "Mateo": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [4, 5, 6],
+                "Matemática": [7, 8, 6],
+                "Historia": [6, 7, 5]
             },
-            "Faltas": 5,
-            "Condicion": "OK",
+            "Faltas": 14,
+            "Condicion": "Mora",
+            "Mora": "Sí",
+            "Previas": ["Lengua", "Historia", "Matemática", "Lengua"],
+            "Sanciones": 3
         }
     },
     "3ro": {
-        "Bautista": {
+        "Sofía": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [9, 8, 7],
+                "Matemática": [6, 7, 6],
+                "Historia": [7, 8, 8]
             },
-            "Faltas": 5,
+            "Faltas": 10,
             "Condicion": "OK",
+            "Mora": "No",
+            "Previas": [],
+            "Sanciones": 0
         },
-        "Mateo": {
+        "Tomás": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [4, 5, 5],
+                "Matemática": [7, 6, 8],
+                "Historia": [5, 5, 5]
             },
-            "Faltas": 5,
-            "Condicion": "OK",
+            "Faltas": 27,
+            "Condicion": "Libre",
+            "Mora": "Sí",
+            "Previas": ["Historia", "Matemática"],
+            "Sanciones": 4
         }
     },
-     "4to": {
-         "Bautista": {
+    "4ro": {
+        "Lola": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
-            },
-            "Faltas": 5,
-            "Condicion": "OK",}
-        ,
-        "Mateo": {
-            "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [7, 9, 8],
+                "Matemática": [6, 6, 7],
+                "Historia": [7, 8, 6]
             },
             "Faltas": 5,
             "Condicion": "OK",
-        }
-     },
-     "5to": {
-         "Bautista": {
+            "Mora": "No",
+            "Previas": ["Matemática"],
+            "Sanciones": 0
+        },
+        "Camila": {
             "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
+                "Lengua": [5, 6, 7],
+                "Matemática": [8, 9, 6],
+                "Historia": [5, 6, 5]
             },
-            "Faltas": 5,
-            "Condicion": "OK",}
-        ,
-        "Mateo": {
-            "Materias": {
-                "Historia": [7, 8, 9],
-                "Geografía": [7, 7, 8],
-                "Lengua": [8, 9, 10]
-            },
-            "Faltas": 5,
+            "Faltas": 8,
             "Condicion": "OK",
+            "Mora": "No",
+            "Previas": ["Lengua", "Historia"],
+            "Sanciones": 1
         }
-     }
-
+    },
+    "5ro": {
+        "Juan": {
+            "Materias": {
+                "Lengua": [8, 9, 9],
+                "Matemática": [6, 7, 6],
+                "Historia": [9, 8, 7]
+            },
+            "Faltas": 23,
+            "Condicion": "OK",
+            "Mora": "No",
+            "Previas": [],
+            "Sanciones": 0
+        },
+        "Lucas": {
+            "Materias": {
+                "Lengua": [5, 6, 7],
+                "Matemática": [4, 5, 6],
+                "Historia": [6, 6, 5]
+            },
+            "Faltas": 29,
+            "Condicion": "Libre",
+            "Mora": "Sí",
+            "Previas": ["Lengua", "Historia", "Matemática", "Matemática"],
+            "Sanciones": 3
+        }
+    }
 }
+
 # Inicio del programa
 
 usuario = input("ingrese su usuario: ")
