@@ -18,35 +18,22 @@ def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
                 cont += 1
             print("-" * 60)
             
-        
 
-def mostrar_alumno(alumno, alumnos):  # Imprimir boletín académico de alumno
-    if alumno not in alumnos:
-        print("No se encuentra el alumno.")
-    else:
-        print(f"{alumno} - Boletín académico")
-        print("-" * 40)
-        for materia in alumnos[alumno]:
-            notas = alumnos[alumno][materia]
-            print("Materia:", materia)
-            print("Notas:", end=" ")
-            for nota in notas[:-1]: 
-                print(nota, end=" ")
-            print()
-            print("Condición:", notas[-1])
-            print("-" * 40)
+def imprimir_datos_alumno(cursos, curso, alumno):
+    datos_alumno = cursos[curso][alumno]
 
-def imprimir_materia(materia, alumnos):  # Imprimir datos de una materia
-    print(f"{'Alumno':<10} {'Notas':<15} {'Condición':<25}")
-    print("-" * 40)
-    for alumno in alumnos:
-        if materia in alumnos[alumno]:
-            notas_str = ', '.join(map(str, alumnos[alumno][materia][:-1]))  # Convertimos las notas en string, sacamos la condicion
-            condicion = alumnos[alumno][materia][-1]  # La última posición es la condición
-            print(f"{alumno:<10} {notas_str:<15} {condicion:<15}")
-            print("-" * 40)
+    print(f"Datos del alumno '{alumno}' en el curso '{curso}':")
+    print(f"  Materias:")
+    for materia, notas in datos_alumno["Materias"].items():
+        print(f"    - {materia}: Notas: {notas}, Promedio: {sum(notas) / len(notas):.2f}")
+    print(f"  Faltas: {datos_alumno['Faltas']}")
+    print(f"  Condición: {datos_alumno['Condicion']}")
+    print(f"  Mora: {datos_alumno['Mora']}")
+    print(f"  Previas: {', '.join(datos_alumno['Previas']) if datos_alumno['Previas'] else 'Ninguna'}")
+    print(f"  Sanciones: {datos_alumno['Sanciones']}")
 
-def matriz_promedios(alumnos):  # Genera matriz de promedios para dar resultados generales
+
+"""def matriz_promedios(alumnos):  # Genera matriz de promedios para dar resultados generales
     num_materias = len(materias)
     num_alumnos = len(alumnos)
     matriz = [[0] * num_materias for _ in range(num_alumnos)]
@@ -64,17 +51,10 @@ def matriz_promedios(alumnos):  # Genera matriz de promedios para dar resultados
             matriz[i][j] = promedio  # Si el alumno no tiene esa materia o está en curso, el promedio es 0
             j += 1
         i += 1
-    return matriz
-def printmaterias(mats):
-    
-    print(" ")
-    for mat in mats:
-        print( mat )
-        
+    return matriz"""
 
-    print(" ")
 
-def cuadro_de_honor(alumnos):
+"""def cuadro_de_honor(alumnos):
     honor = []
     for alumno in alumnos: 
         materias = alumnos[alumno]
@@ -93,28 +73,47 @@ def cuadro_de_honor(alumnos):
         for alumno in honor:  
             print(alumno)
     else:
-        print("No hay alumnos en el cuadro de honor.")
+        print("No hay alumnos en el cuadro de honor.")"""
 
 
-def operacion_a():
+def matriznotasxcurso(cursos_profe, materia):
+    matriz = []
+    for curso in cursos_profe:
+        fila = []    
+        for alumno in cursos[curso]:
+            notas = cursos[curso][alumno]['Materias'][materia]
+            fila.append(notas[2])
+        matriz.append(fila)
+    
+    return matriz
+
+
+def funciones_profesor(nombre):
     menu =[
-        "a) Ver materias",
-        "b) Ver notas",
-        "c) Ver alumnos",
+        "a) Ver notas",
+        "b) Ver alumnos",
+        
     ]
     for item in menu:
         print(item)
     op = input("Ingrese la operación que desea realizar: ").lower()
     print(" ")
-    if op == 'a':
-        printmaterias(materias)
-        materia = input("Ingrese la materia que desea ver: ").capitalize()
-        print(" ")
-        if materia in materias:
-            imprimir_materia(materia, alumnos)
-        else:
-            print("No se encuentra la materia")
-    elif op == 'b':
+    cursos_profe = profesores[nombre]["cursos"]
+    materias_profe = profesores[nombre]["materias"]
+    if op == "a":
+        for materia in materias_profe:
+            notas = matriznotasxcurso(cursos_profe, materia)
+            print(notas)
+    elif op=="b":
+        for curso in cursos_profe:
+            print("Alumnos de ", curso)
+            alumnos_curso = cursos[curso].keys()
+            for alumno in alumnos_curso:
+                print(alumno, end=" ")
+            print("")
+    else:
+        print("Opción no válida. Intente de nuevo.")
+    """elif op == 'c':
         matrizprom = matriz_promedios(alumnos)
         i = 0
         for alumno in alumnos:
@@ -128,17 +127,18 @@ def operacion_a():
             print("")
             i += 1
 
-    elif op == 'c':
+    elif op == 'd':
         print("Al cuadro de honor se llega habiendo promocionado o aprobado todas las materias.")
-        cuadro_de_honor(alumnos)
-    else:
-        print("Opción no válida. Intente de nuevo.")
+        cuadro_de_honor(alumnos)"""
+    
+    
 
 
-def operacion_c():
+def funciones_admin():
     menu = [
         "a) Eliminar alumnos",
         "b) Agregar alumnos",
+        "c) Ver datos de alumno"
     ]
 
     for item in menu:
@@ -177,6 +177,17 @@ def operacion_c():
         materias_alumno = {materia: [] for materia in materias}
         cursos[años[int(año)]][alumno] = { "Materias": materias_alumno, "Faltas": 0, "Condicion": "OK" }
         display_notas_alumnos(cursos)
+
+    elif op == "c":
+        for año in años: 
+            print(año, " ingrese el numero ", (años.index(año) + 1))
+        año = input()
+        alumnos_curso = cursos[años[int(año)]].keys()
+        alumno = input("Ingrese el nombre del alumno: ").capitalize()
+        if alumno not in alumnos_curso:
+            print(f"El alumno '{alumno}' no está en el curso '{año}'.")
+        else:
+            imprimir_datos_alumno(cursos, años[int(año)], alumno)
 
     else:
         print("Opción no válida. Intente de nuevo.")
@@ -240,7 +251,7 @@ cursos = {
             "Sanciones": 3
         }
     },
-    "3to": {
+    "3ro": {
         "Sofía": {
             "Materias": {
                 "Lengua": [9, 8, 7],
@@ -320,6 +331,39 @@ cursos = {
     }
 }
 
+profesores = {
+    "Julian": {
+        "materias": ["Historia"],
+        "cursos": ["1ro", "2do", "3ro"],
+        "nombre_usuario": "jperez"
+    },
+    "Magdalena": {
+        "materias": ["Matemáticas"],
+        "cursos": ["2do", "4to"],
+        "nombre_usuario": "agomez"
+    },
+    "Carlos": {
+        "materias": ["Lengua"],
+        "cursos": ["1ro", "5to"],
+        "nombre_usuario": "crodriguez"
+    },
+    "Laura": {
+        "materias": ["Historia"],
+        "cursos": ["4to", "5to"],
+        "nombre_usuario": "lfernandez"
+    },
+    "Maria": {
+        "materias": ["Matemáticas"],
+        "cursos": ["1ro", "3ro", "5to"],
+        "nombre_usuario": "mlopez"
+    }, 
+    "Roberto":{
+        "materias": ["Lengua"],
+        "cursos": ["2do", "3ro", "4to"],
+        "nombre_usuario": "rcarlos"
+    }
+}
+
 # Inicio del programa
 
 usuario = input("ingrese su usuario: ")
@@ -331,16 +375,22 @@ if usuario in nombres_usuarios:
     rol = usuarios[usuario]["rol"]
     display_notas_alumnos(cursos)
     if rol == "admin":
-        operacion_c()
+        funciones_admin()
         decision = input("Desea realizar otra operación? si/no: ").lower()
         while decision == "si":
-            operacion_a()
+            funciones_admin()
             decision = input("Desea realizar otra operación? si/no: ").lower()
     else:
-        operacion_a()
+        nombres_profesores = profesores.keys()
+        nombre = input("Ingrese su nombre").capitalize()
+        while nombre not in nombres_profesores:
+            for profe in nombres_profesores:
+                print(profe)
+            nombre = input("Ingrese correctamente su nombre como en la lista").capitalize()
+        funciones_profesor(nombre)
         decision = input("Desea realizar otra operación? si/no: ").lower()
         while decision == "si":
-            operacion_a()
+            funciones_profesor()
             decision = input("Desea realizar otra operación? si/no: ").lower()
     
     print("Adios")
