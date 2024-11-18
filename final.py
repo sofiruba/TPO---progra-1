@@ -1,6 +1,6 @@
 import json
 # FUNCIONES
-
+#
 def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
     print("Listado de alumnos de Las Margaritas")
     print(f"{'Curso':<10}{'Alumno':<10} {'Materia':<15} {'Notas':<25}")
