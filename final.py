@@ -1,6 +1,31 @@
 import json
 # FUNCIONES
 #
+def promedio_pormateria(notas_pormateria):
+    nota = notas_pormateria[:-1]
+    return sum(nota)/len(nota)
+
+def previa_pormateria(nota, años, alumno_elegido, materia):
+    previa = False
+    if nota[2] < 6:
+            previa = True      
+    if previa == True:
+            cursos[años][alumno_elegido]["Previas"].append(materia)
+            print ("Se actualizo las previas")
+                
+def notas_elegida(nota):
+    nota_elegida1= input("Desea modificar la nota de la primera evalucacion? si/no: ").capitalize()
+    if nota_elegida1 == "Si":
+        nota1 = int(input("Ingrese la nota modificada de la  primera evalucacion: "))
+        nota.pop(0)
+        nota[0:0] = [nota1]
+                
+    nota_elegida2= input("Desea modificar la nota de la segunda evalucacion? si/no: ").capitalize()
+    if nota_elegida2 == "Si":
+        nota1 = int(input("Ingrese la nota modificada de la segunda evaluacion: "))
+        nota.pop(1)
+        nota[1:1] = [nota1]
+
 def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
     print("Listado de alumnos de Las Margaritas")
     print(f"{'Curso':<10}{'Alumno':<10} {'Materia':<15} {'Notas':<25}")
@@ -17,7 +42,35 @@ def display_notas_alumnos(cursos):  # Imprime listado de alumnos con sus notas
                     print(f"{curso: <10}{alumno:<10} {mat:<15} {notas_str:<25}")
                 cont += 1
             print("-" * 60)
-            
+
+def display_alumnos(cursos):  # Imprime listado de alumnos
+    for año in años: 
+        print(año, " ingrese el numero ", (años.index(año) + 1))
+    año_seleccionado = input()
+
+    curso_index = int(input("Ingrese el número correspondiente al curso: ")) -1
+    while curso_index < 0 or curso_index >= len(años):
+        print("Número de curso inválido. Intente nuevamente.")
+    
+    año_seleccionado = años[curso_index]
+    alumnos_año = cursos[año_seleccionado]
+
+    print(f"\nListado de alumnos de {año_seleccionado}")
+    print(f"{'Curso':<10}{'Alumno':<10} {'Materia':<15} {'Notas':<25}")
+    print("-" * 60)
+    
+    for alumno, datos in alumnos_año.items():
+        materias = datos["Materias"]
+        cont = 0
+        for mat, notas in materias.items():
+            notas_str = ', '.join(map(str, notas))
+            if cont > 0:
+                print(f"{'':<10}{'':<10} {mat:<15} {notas_str:<25}")
+            else:
+                print(f"{año_seleccionado:<10}{alumno:<10} {mat:<15} {notas_str:<25}")
+            cont += 1
+        print("-" * 60)
+                   
 
 def imprimir_datos_alumno(cursos, curso, alumno):
     datos_alumno = cursos[curso][alumno]
@@ -138,7 +191,12 @@ def funciones_admin():
     menu = [
         "a) Eliminar alumnos",
         "b) Agregar alumnos",
-        "c) Ver datos de alumno"
+        "c) Visualizar las deudas de los alumnos",
+        "d) Modificar las deudas de los alumnos",
+        "e) Visualizar las sanciones de los alumnos",
+        "f) Modificar las notas de los alumnos",
+        "g) Ver notas del curso",
+        "h) Ver datos de alumno"
     ]
 
     for item in menu:
@@ -177,8 +235,85 @@ def funciones_admin():
         materias_alumno = {materia: [] for materia in materias}
         cursos[años[int(año)]][alumno] = { "Materias": materias_alumno, "Faltas": 0, "Condicion": "OK" }
         display_notas_alumnos(cursos)
-
     elif op == "c":
+        for año in años: 
+            print(año, " ingrese el numero ", (años.index(año) + 1))
+        listado_decursos = input()
+        curso_index = int(input("Ingrese el número correspondiente al curso: ")) -1
+        while curso_index < 0 or curso_index >= len(años):
+            print("Número de curso inválido. Intente nuevamente.")
+            curso_index = int(input("Ingrese el número correspondiente al curso: ")) - 1 
+        curso_seleccionado = años[curso_index]
+        alumnos_curso = cursos[curso_seleccionado]
+
+        print(f"\nAlumnos con mora del curso {curso_seleccionado}:")
+        alumnos_con_mora = False
+        for alumno, datos in alumnos_curso.items():
+            if datos["Mora"] == "Sí":
+                print(f"  - {alumno}")
+                alumnos_con_mora = True
+
+        if not alumnos_con_mora:    
+            print("  No hay alumnos con mora en este curso.")
+
+    elif op == "d":
+        for año in años: 
+            print(año, " ingrese el numero ", (años.index(año) + 1))
+        curso_index = int(input())
+        while curso_index not in len(años):
+            print("Número de curso inválido. Intente nuevamente.")
+            curso_index = int(input("Ingrese el número correspondiente al curso: ")) - 1 
+
+        alumno = input("Ingrese el nombre del alumno: ").capitalize()
+        curso_seleccionado = años[curso_index-1]
+        alumnos_curso = cursos[curso_seleccionado]
+
+        if alumno in alumnos_curso:
+            if alumnos_curso[alumno]["Mora"] == "Sí":
+                alumnos_curso[alumno]["Mora"] = "No"
+            else:
+                alumnos_curso[alumno]["Mora"] = "Sí"
+            print(f"Estado de mora actualizado para {alumno}.")
+        else:
+            print("El alumno no se encuentra.")
+    
+    elif op == "f":
+        for año in años: 
+            print(año, " ingrese el numero ", (años.index(año) + 1))
+        año_index = int(input())
+        while año_index not in len(años):
+                print("Número de curso inválido. Intente nuevamente.")
+                año_index = int(input("Ingrese el número correspondiente al curso: ")) - 1 
+
+        alumno = input("Ingrese el nombre del alumno: ").capitalize()
+        año_seleccionado = años[año_index-1]
+        alumnos_año = cursos[año_seleccionado]
+
+        if alumno in alumnos_año:   
+            materias = alumnos_año[alumno]["Materias"].keys()
+            print (*materias)
+            mate = input(("Ingrese la materia: ")).capitalize()
+
+            if mate in materias:
+                notas = alumnos_año[alumno]["Materias"][mate]
+                elegir_nota = notas_elegida(notas)
+                promedio = promedio_pormateria(notas)
+                notas.pop(2)
+                notas[2:2] = [promedio]
+                previas = previa_pormateria(notas, año_seleccionado, alumno, mate)
+                print("Las notas se han actualizado correctamente.")
+                display_alumnos(cursos)
+        
+            else:
+                print ("No se encuentra la materia ")
+                 
+        else:
+            print ("El alunmo no se encuentra resgristrado. ")
+    
+    elif op == "g":
+        display_alumnos(cursos)
+    
+    elif op == "h":
         for año in años: 
             print(año, " ingrese el numero ", (años.index(año) + 1))
         año = input()
