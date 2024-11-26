@@ -17,7 +17,6 @@ def archivo_notas_alumnos(cursos):
         except NameError:
             pass
 
-
 def mostrar_notas(cursos_profe, materias_profe):
     for materia in materias_profe:
         print(f"\nNotas de {materia} por curso:")
@@ -33,14 +32,11 @@ def mostrar_notas(cursos_profe, materias_profe):
                 print(f"{alumno:<15}{notas_alumno[0]:<10}{notas_alumno[1]:<10}{notas_alumno[2]:<10}")
             print("-" * 45)
 
-
-
 def gestionar_asistencia(cursos_profe):
     if cursos:
         tomarasistencia(cursos_profe, cursos)
     else:
         print("No hay cursos registrados para tomar asistencia.")
-
 
 def gestionar_estadisticas(cursos_profe, materia_profe):
     if not materia_profe or len(materia_profe) == 0:
@@ -63,7 +59,6 @@ def gestionar_estadisticas(cursos_profe, materia_profe):
         case _:
             print("Opción no válida.")
 
-
 def mostrar_mejores_alumnos(cursos_profe, materia_profe):
     
     for curso in cursos_profe:
@@ -78,7 +73,6 @@ def mostrar_mejores_alumnos(cursos_profe, materia_profe):
                 for alumno, datos in mejores_alumnos:
                     promedio = datos["Materias"][materia_profe][2]
                     print(f"{alumno}: {promedio:.2f}")
-                print("")
             else:
                 print(f"No hay alumnos con promedio mayor a 6 en {curso}.")
         else:
@@ -96,12 +90,10 @@ def mostrar_alumnos_diciembre(cursos_profe, materia_profe):
                 print(f"Alumnos que van a diciembre en {curso} para {materia_profe}:")
                 for alumno, promedio in alumnos_diciembre:
                     print(f"{alumno}: {promedio:.2f}")
-                print("")
             else:
                 print(f"No hay alumnos con promedio menor a 7 en {curso}.")
         else:
             print(f"No hay alumnos para {curso}")
-
 
 def calcular_promedio_global(cursos_profe, materia_profe):
     total_promedios = 0
@@ -131,47 +123,66 @@ def gestionar_subida_notas(cursos_profe, materias_profe):
         return
     subir_notas(cursos_profe, curso, materias_profe)
 
-
-def funciones_profesor(usuario):
+def funciones_profesor(usuario, intentos_restantes):
     if not profesores or usuario not in profesores:
         print("No hay datos de profesores disponibles.")
-        return
-
     menu = [
         "1) Ver notas",
         "2) Ver alumnos",
         "3) Tomar asistencia",
         "4) Estadísticas",
-        "5) Subir notas"
+        "5) Subir notas",
+        "6) Salir"
     ]
-    op = elegir_opcion(menu)
     cursos_profe = profesores[usuario].get("cursos", [])
     materias_profe = profesores[usuario].get("materias", [])
 
     if not cursos_profe or not materias_profe:
         print("No hay cursos o materias asignados a este profesor.")
-        return
 
-    match op:
-        case 1:
-            mostrar_notas(cursos_profe, materias_profe)
-        case 2:
-            for curso in cursos_profe:
-                if curso in cursos and cursos[curso]:
-                    print(f"Alumnos de {curso}:")
-                    for alumno in cursos[curso].keys():
-                        print(alumno)
-                    print("")
-                else:
-                    print(f"No hay alumnos registrados en el curso {curso}.")
-        case 3:
-            gestionar_asistencia(cursos_profe)
-        case 4:
-            gestionar_estadisticas(cursos_profe, materias_profe[0])
-        case 5:
-            gestionar_subida_notas(cursos_profe, materias_profe)
-        case _:
-            print("Opción no válida.")
+
+    while intentos_restantes > 0:
+        print("\nMenú Profesor:")
+        for opcion in menu:
+            print(opcion)
+
+        try:
+            op = int(input("\nSeleccione una opción: ").strip())
+            match op:
+                case 1:
+                    mostrar_notas(cursos_profe, materias_profe)
+                case 2:
+                    for curso in cursos_profe:
+                        if curso in cursos and cursos[curso]:
+                            print(f"Alumnos de {curso}:")
+                            for alumno in cursos[curso].keys():
+                                print(alumno)
+                            print("")
+                        else:
+                            print(f"No hay alumnos registrados en el curso {curso}.")
+                case 3:
+                    gestionar_asistencia(cursos_profe)
+                case 4:
+                    gestionar_estadisticas(cursos_profe, materias_profe[0])
+                case 5:
+                    gestionar_subida_notas(cursos_profe, materias_profe)
+                case 6:
+                    break
+                case _:
+                    print("Opción no válida.")
+                    intentos_restantes -= 1
+                    if intentos_restantes > 0:
+                        print(f"Intentos restantes: {intentos_restantes}")
+                    else:
+                        print("Se ha superado el número máximo de intentos. Acceso denegado.")
+        except ValueError:
+            print("Entrada no válida. Por favor, ingrese un número.")
+            intentos_restantes -= 1
+            if intentos_restantes > 0:
+                print(f"Intentos restantes: {intentos_restantes}")
+            else:
+                print("Se ha superado el número máximo de intentos. Acceso denegado.")
+    return intentos_restantes
 
 # FUNCIONES GENERALES
 def elegir_opcion(menu):
@@ -375,15 +386,13 @@ def operaciones_notas():
                     else:
                         print ("No se encuentra la materia ")      
                 else:
-                    print ("El alunmo no se encuentra resgristrado. ")
+                    print ("El alumno no se encuentra. ")
             else: 
                 print("No hay alumnos en ese curso")
         
         case 2:
             if cursos:
                 display_alumnos(cursos)
-                archivo = input("Desea guardar los datos en un archivo? si/no: ").lower()
-                archivo = opcion_valida(archivo, ["si", "no"])
             else:
                 print("No hay alumnos en el sistema")
         case 3:
@@ -469,15 +478,13 @@ def visualizar_sanciones():
             for alumnosdelcurso in cursos:
                 print(f"-Sanciones de {alumnosdelcurso}: ")
                 if alumnosdelcurso in cursos:
-                
                     alumnos_curso = cursos[alumnosdelcurso]
                     for alumno in alumnos_curso:
-                        if "Sanciones" in alumnos_curso[alumno]:
-                            sanciones = alumnos_curso[alumno]["Sanciones"]
+                        sanciones = alumnos_curso[alumno]["Sanciones"]
+                        if sanciones > 0:
                             print(f"{alumno} tiene {sanciones} sancion/es. ")
                         else:
                             print(f"{alumno} no tiene sanciones registradas.")
-                    print("")
                 else:
                     print(f"No hay alumnos registrados en el sistema")
         case 2:
@@ -492,8 +499,8 @@ def visualizar_sanciones():
                 match eleccion:
                     case 1:
                         for alumno in alumnos_curso:
-                            if "Sanciones" in alumnos_curso[alumno]:
-                                sanciones = alumnos_curso[alumno]["Sanciones"]
+                            sanciones = alumnos_curso[alumno]["Sanciones"]
+                            if sanciones > 0:
                                 print(f"{alumno} tiene {sanciones} sancion/es. ")
                             else:
                                 print(f"{alumno} no tiene sanciones registradas.")
@@ -501,12 +508,12 @@ def visualizar_sanciones():
                     case 2:
                         mostrar_alumnos(alumnos_curso)
                         alumno_elegido = (input("Ingresa el alumno del que se quiere ver las sanciones: ")).capitalize()
-                        
                         while alumno_elegido not in alumnos_curso:
                             mostrar_alumnos(alumnos_curso)
                             alumno_elegido = (input("Alumno invalido, ingresar uno de la lista: ")).capitalize()
-                        if "Sanciones" in alumnos_curso[alumno_elegido]:
-                            sanciones = alumnos_curso[alumno_elegido]["Sanciones"]
+                        sanciones = alumnos_curso[alumno_elegido]["Sanciones"]
+                        if sanciones > 0:
+                            
                             print(f"{alumno_elegido} tiene {sanciones} sancion/es") 
                         else:
                             print(f"{alumno_elegido} no tiene sanciones registradas.")
@@ -528,7 +535,7 @@ def visualizar_sanciones():
                 print("No hay sanciones registradas.")
         case _:
             print("Opcion no valida")
-            visualizar_sanciones()
+            
             
 def agregar_sanciones():
         ptosmaximos= 50
@@ -566,14 +573,13 @@ def operaciones_sanciones():
             agregar_sanciones()
         case _:
             print("Operacion no valida")
-            print("")
-            operaciones_sanciones() 
 
 #Deudas
 def operaciones_deudas():
     menu = [
         "1) Visualizar las deudas de los alumnos", 
-        "2) Modificar las deudas de los alumnos"
+        "2) Modificar las deudas de los alumnos",
+
     ]
     op = elegir_opcion(menu)
     match op:
@@ -594,6 +600,7 @@ def operaciones_deudas():
         case 2:
             año_elegido = mostrar_años(años)
             if año_elegido in cursos:
+                mostrar_alumnos(cursos[año_elegido])
                 alumno = input("Ingrese el nombre del alumno: ").capitalize()
                 alumnos_curso = cursos[año_elegido]
                 if alumno in alumnos_curso:
@@ -613,18 +620,26 @@ def operaciones_deudas():
 # Estedisticas
 def estadisticas(materias, cursos):
     menu = [
-        "1) Ver alumnos libres por faltas",
+        "1) Ver alumnos libres.",
         "2) Ver alumnos desaprobados"
     ]
     op = elegir_opcion(menu)
     match op:
         case 1:
             if cursos:
-                print("Alumnos libres por faltas:")
+                print("Alumnos libres:")
+                cont = 0
                 for curso, alumnos in cursos.items():
+                    
                     for alumno, datos in alumnos.items():
+                        text = ""
                         if datos["Condicion"] == "Libre":
-                            print(f"{alumno} de {curso} con {datos['Faltas']} faltas")
+                            if datos['Mora']== "Si ":
+                                text = ", con deuda"
+                            print(f"{alumno} de {curso} con {datos['Faltas']} faltas {text } y {datos['Sanciones']} sanciones.")
+                            cont +=1
+                if cont == 0:
+                    print("No hay alumnos libres")
             else:
                 print("No hay alumnos en el sistema")
         case 2:
@@ -639,10 +654,15 @@ def estadisticas(materias, cursos):
                     curso_elegido = mostrar_años(años)
                     if curso_elegido in cursos:
                         print(f"Alumnos desaprobados en el curso {curso_elegido}:")
+                        cont = 0
                         for alumno, datos in cursos[curso_elegido].items():
                             for materia, notas in datos["Materias"].items():
                                 if notas[2] < 6:
                                     print(f"{alumno} en {materia} con promedio {notas[2]:.2f}.")
+                                    cont +=1
+                        if cont == 0:
+                            print("No hay alumnos desaprobados")
+                        
                     else:
                         print("No hay alumnos en ese curso.")
                 case 2:
@@ -653,23 +673,36 @@ def estadisticas(materias, cursos):
                     materia_elegida = input("\nIngrese la materia: ").capitalize()
                     if cursos:
                         print(f"Alumnos desaprobados en {materia_elegida}:")
+                        cont = 0
                         for curso, alumnos in cursos.items():
                             for alumno, datos in alumnos.items():
                                 if materia_elegida in datos["Materias"]:
                                     notas = datos["Materias"][materia_elegida]
                                     if notas[2] < 6:
                                         print(f"{alumno} de {curso} en {materia_elegida} con promedio {notas[2]:.2f}.")
+                                        cont +=1
+                        if cont == 0:
+                            print("No hay alumos desaprobados")
+                        
                     else:
                         print("No hay alumnos en el sistema")
                 case 3:
                     if cursos:
-                        mostrar_todos_los_alumnos(cursos)
+                        año_elegido = mostrar_años(años)
+                        curso_elegido = cursos[año_elegido]
+                        mostrar_alumnos(curso_elegido)
                         alumno_elegido = input("Ingrese el nombre del alumno: ").capitalize()
-                        for curso, alumnos in cursos.items():
+                        for alumnos in curso_elegido.keys():
                             if alumno_elegido in alumnos:
-                                for materia, notas in alumnos[alumno_elegido]["Materias"].items():
+                                cont = 0
+                                for materia, notas in curso_elegido[alumno_elegido]["Materias"].items():
                                     if notas[2] < 6:
                                         print(f"Desaprueba {materia} con promedio {notas[2]:.2f}.")
+                                        cont +=1
+                                if cont == 0:
+                                    print(f"el alumno {alumno_elegido} no desaprobo ninguna")
+                            else:
+                                print(f"El alumno {alumno_elegido} no se encuentra en {año_elegido}")    
                     else:
                         print("No hay alumnos en el sistema")
                 case _:
@@ -738,6 +771,8 @@ def agregar_usuarios():
     ]
 
     rol = elegir_opcion(menu)
+    while rol not in [1,2]:
+        rol = int(input("Ingrese 1 o 2"))
     match rol:
         case "1":
             rol= "admin"
@@ -786,15 +821,22 @@ def agregar_usuarios():
             print("¿En qué años dicta clases el nuevo profesor?")
             for año in cursos:
                 print(f"- {año}")
-            cursos_profe = set()  # 
+            print(años)
+            cursos_profe = set()  
             while True:
-                curso = input("Ingresar por lo menos un curso (-1 para terminar): ")
-                if curso == "-1" and len(cursos_profe) > 0:  # Permitir salir si hay al menos un curso
+                curso = int(input("Ingresar por lo menos un curso (-1 para terminar): "))
+                if curso == -1 and len(cursos_profe) > 0:  
                     break
-                if curso in cursos:
-                    cursos_profe.add(curso)
+                if curso in range(1, len(años)+1):
+                    if años[curso-1] not in cursos_profe:
+                        cursos_profe.add(años[curso-1])
+                    else: 
+                        print("Ya selecciono este curso")
                 else:
+
                     print("Curso inválido, ingrese un curso válido o '-1' para terminar.")
+                if len(cursos_profe) == len(años):
+                    break
             
             cursos_profe = list(cursos_profe)
 
@@ -813,6 +855,8 @@ def generarcontraseña():
         "2) Sugerir una contraseña",
     ]
     contra = elegir_opcion(menu)
+    while contra not in [1,2]:
+        contra = int(input("ingrese 1 o 2:"))
     match contra:
         case 1:
             contra = input("Ingresar contraseña (min 5 y max 12 caracteres, solo números y letras):")
@@ -829,6 +873,8 @@ def generarcontraseña():
                     "2) No, crear otra",
                 ]
                 check = elegir_opcion(menu)
+                while check not in [1,2]:
+                    check = int(input("ingrese 1 o 2:"))
                 if check == 1:
                     print(f"Contraseña guardada: {contra}")  # Mostrar la contraseña guardada
                     break  # Terminar el bucle si se elige guardar la contraseña
@@ -858,37 +904,59 @@ def guardar_usuarios_en_archivo(userss):
             pass
 
 
-def funciones_admin():
-    menu= [
+def funciones_admin(intentos_restantes):
+    menu = [
         "1) Alumnos",
         "2) Deudas",
         "3) Sanciones",
         "4) Boletines",
-        "5) Estadisticas",
-        "6) Usuarios"
+        "5) Estadísticas",
+        "6) Usuarios",
+        "7) Salir"
     ]
-    op = elegir_opcion(menu)
-    match op:
-        case 1:
-            print("")
-            operaciones_alumnos()
-        case 2:
-            print("")
-            operaciones_deudas()
-        case 3:
-            print("")
-            operaciones_sanciones()
-        case 4:
-            print("")
-            operaciones_notas()
-        case 5:
-            print("")
-            estadisticas(materias, cursos)
-        case 6:
-            print("")
-            operaciones_usuarios()
-        case _:
-            print("Operacion no valida")
+
+    while intentos_restantes > 0:
+        print("\nMenú Administrativo:")
+        
+        try:
+            op = elegir_opcion(menu)
+            match op:
+                case 1:
+                    print("")
+                    operaciones_alumnos()                    
+                case 2:
+                    print("")
+                    operaciones_deudas()                    
+                case 3:
+                    print("")
+                    operaciones_sanciones()                   
+                case 4:
+                    print("")
+                    operaciones_notas()                    
+                case 5:
+                    print("")
+                    estadisticas(materias, cursos)
+                case 6:
+                    print("")
+                    operaciones_usuarios()
+                case 7:
+                    break
+                case _:
+                    print("Operación no válida.")
+                    intentos_restantes -= 1
+                    if intentos_restantes > 0:
+                        print(f"Intentos restantes: {intentos_restantes}")
+                    else:
+                        print("Se ha superado el número máximo de intentos. Acceso denegado.")
+        except ValueError:
+            print("Entrada no válida. Por favor, ingrese un número.")
+            intentos_restantes -= 1
+            if intentos_restantes > 0:
+                print(f"Intentos restantes: {intentos_restantes}")
+            else:
+                print("Se ha superado el número máximo de intentos. Acceso denegado.")
+    return intentos_restantes
+            
 
 #Operaciones profesor
 
@@ -898,16 +966,21 @@ def tomarasistencia(cursos_profe, cursos):
     for alumno, datos in curso.items():
         print(alumno)
         op = elegir_opcion(["1. Presente", "2. Ausente"])
+        while op not in [1,2]:
+            op = elegir_opcion(["1. Presente", "2. Ausente"])
         if op == 2:
             datos["Faltas"] += 1
+            print(f"{alumno} ausente")
         else:
             print(f"{alumno} presente")
-
 def iniciar_sesion(usuarios, profesores):
-    while True:
+    intentos_restantes = 5  
+    while intentos_restantes > 0:
         try:
+            if intentos_restantes < 2:
+                print(f"Le queda {intentos_restantes} intento restante")
             usuario = input("Ingrese su usuario: ").strip()
-            usuario= usuario.lower()
+            usuario = usuario.lower()
             if usuario not in usuarios:
                 raise KeyError("Usuario no encontrado. Intente nuevamente.")
  
@@ -915,38 +988,45 @@ def iniciar_sesion(usuarios, profesores):
             if usuarios[usuario]["contraseña"] != contraseña:
                 raise ValueError("Contraseña incorrecta. Intente nuevamente.")
 
-            if usuarios[usuario]["rol"]== "admin":
+            if usuarios[usuario]["rol"] == "admin":
                 nombre_administrador = administradores[usuario]["nombre"]
                 print("")
                 print(f"Bienvenido, {nombre_administrador}.")
                 return usuario, nombre_administrador, usuarios[usuario]["rol"]
-
             else:
                 nombre_profesor = profesores[usuario]["nombre"]
                 print("")
                 print(f"Bienvenido, {nombre_profesor}.")
                 return usuario, nombre_profesor, usuarios[usuario]["rol"]
-        
+
         except (KeyError, ValueError) as e:
             print(e)
+            intentos_restantes -= 1  # Reducimos el contador de intentos
+            if intentos_restantes == 0:
+                print("Se ha excedido el número máximo de intentos. Acceso denegado.")
+                break 
 
 def realizar_operaciones(rol, nombre_profesor):
     if rol == "admin":
         print("Acceso como administrador.")
-        while True:
-            funciones_admin()  # Llama a tus funciones específicas para admin
-            opccion = input("¿Desea realizar otra operación? (si/no): ").lower()
-            otra_op = opcion_valida(opccion, ["si", "no"])
-            if otra_op != "si":
-                break
+        intentos = 3
+        while intentos > 0:
+            intentos=funciones_admin(intentos)  
+            if intentos > 0:
+                opccion = input("¿Desea realizar otra operación? (si/no): ").lower()
+                otra_op = opcion_valida(opccion, ["si", "no"])
+                if otra_op != "si":
+                    break
     elif rol == "profesor":
         print(f"Operaciones para el profesor {nombre_profesor}.")
-        while True:
-            funciones_profesor(nombre_profesor)  # Llama a tus funciones específicas para profesor
-            opccion = input("¿Desea realizar otra operación? (si/no): ").lower()
-            otra_op = opcion_valida(opccion, ["si", "no"])
-            if otra_op != "si":
-                break
+        intentos = 3
+        while intentos > 0:
+            intentos = funciones_profesor(nombre_profesor, intentos)  
+            if intentos > 0:
+                opccion = input("¿Desea realizar otra operación? (si/no): ").lower()
+                otra_op = opcion_valida(opccion, ["si", "no"])
+                if otra_op != "si":
+                    break
     else:
         print("Rol desconocido.")
 
